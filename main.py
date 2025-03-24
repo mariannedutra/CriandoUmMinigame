@@ -48,13 +48,13 @@ class Player(pygame.sprite.Sprite):
     def jump(self):
         if not self.jumping:  # Só pula se estiver no chão
             self.jumping = True
-            self.speed_y = -20  # Impulso inicial do pulo
+            self.speed_y = -30  # Impulso inicial do pulo
 
     def knockback(self):
         # Empurra o Player para trás
-        self.rect.x -= 200  # Recua 200 pixels (ajustável)
+        self.rect.x -= 100  # Recua 200 pixels (ajustável)
         self.at_limit = False
-        self.speed_x = 5  # Recupera a velocidade para voltar ao meio
+        self.speed_x = 2  # Recupera a velocidade para voltar ao meio
 
 # Classe Orientadora com perseguição
 class Orientadora(pygame.sprite.Sprite):
