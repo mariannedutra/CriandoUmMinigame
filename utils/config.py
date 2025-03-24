@@ -14,11 +14,12 @@ clock = pygame.time.Clock()
 
 # Valores de jogo
 BASE_OBSTACLE_SPEED = 3
-SPAWN_INTERVAL = 150  # Intervalo para spawn de obstáculos
-PLAYER_SPEED_X = 5
+SPAWN_INTERVAL = 130  # Intervalo para spawn de obstáculos
+PLAYER_SPEED_X = 2
+PLAYER_SPEED_X_INITIAL = 4
 PLAYER_JUMP_FORCE = -30
-PLAYER_KNOCKBACK = 50
-ORIENTADORA_SPEED = 1.5
+PLAYER_KNOCKBACK = 200
+ORIENTADORA_SPEED = 2
 
 # Cores e fontes (opcional, para centralizar estilos)
 WHITE = (255, 255, 255)

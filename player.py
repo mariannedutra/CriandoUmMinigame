@@ -1,6 +1,6 @@
 # player.py
 import pygame
-from utils.config import WIDTH, HEIGHT, PLAYER_SPEED_X, PLAYER_JUMP_FORCE, PLAYER_KNOCKBACK
+from utils.config import PLAYER_SPEED_X_INITIAL, WIDTH, HEIGHT, PLAYER_SPEED_X, PLAYER_JUMP_FORCE, PLAYER_KNOCKBACK
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -10,7 +10,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(midbottom=(200, HEIGHT))
         self.mask = pygame.mask.from_surface(self.image)
         
-        self.speed_x = PLAYER_SPEED_X
+        self.speed_x = PLAYER_SPEED_X_INITIAL
         self.speed_y = 0
         self.gravity = 1
         self.jumping = False

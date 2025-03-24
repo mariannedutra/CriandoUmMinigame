@@ -57,8 +57,12 @@ def main():
                 game_active = False
 
             # Colisão com Obstáculos (somente se chegou ao centro)
-            if player.at_limit and pygame.sprite.spritecollide(player, obstaculos_group, False, pygame.sprite.collide_mask):
-                player.knockback()
+            if player.at_limit:
+                # Aqui, 'True' faz com que o obstáculo seja removido do grupo ao colidir
+                collisions = pygame.sprite.spritecollide(player, obstaculos_group, True, pygame.sprite.collide_mask)
+                if collisions:
+                    # Se houve colisão, aplicamos o knockback
+                    player.knockback()
 
             # Desenho na tela
             screen.fill(WHITE)

@@ -7,7 +7,7 @@ class Orientadora(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load("assets/orientadora.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (200, 200))
-        self.rect = self.image.get_rect(midbottom=(50, HEIGHT))
+        self.rect = self.image.get_rect(midbottom=(0, HEIGHT))
         self.mask = pygame.mask.from_surface(self.image)
 
         self.player = player
