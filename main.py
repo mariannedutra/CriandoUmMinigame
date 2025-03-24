@@ -11,7 +11,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pygame.image.load("assets/player.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (100, 100))
+        self.image = pygame.transform.scale(self.image, (200,200))
         self.rect = self.image.get_rect(midbottom=(100, HEIGHT))
         self.mask = pygame.mask.from_surface(self.image)  # Máscara adicionada
         self.speed_x = 2
@@ -44,7 +44,7 @@ class Player(pygame.sprite.Sprite):
     def jump(self):
         if not self.jumping:
             self.jumping = True
-            self.speed_y = -25
+            self.speed_y = -30
 
     def knockback(self):
         self.rect.x -= 50
@@ -55,7 +55,7 @@ class Orientadora(pygame.sprite.Sprite):
     def __init__(self, player):
         super().__init__()
         self.image = pygame.image.load("assets/orientadora.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (100, 100))
+        self.image = pygame.transform.scale(self.image, (200,200))
         self.rect = self.image.get_rect(midbottom=(50, HEIGHT))
         self.mask = pygame.mask.from_surface(self.image)  # Máscara adicionada
         self.player = player
@@ -71,7 +71,7 @@ class Obstaculo(pygame.sprite.Sprite):
     def __init__(self, x):
         super().__init__()
         self.image = pygame.image.load("assets/obstaculo.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (100, 100))
+        self.image = pygame.transform.scale(self.image, (150, 150))
         self.rect = self.image.get_rect(midbottom=(x, HEIGHT))
         self.mask = pygame.mask.from_surface(self.image)  # Máscara adicionada
 
@@ -107,8 +107,8 @@ while run:
         score += 1
 
         spawn_timer += 1
-        if spawn_timer > 100:
-            obstaculo = Obstaculo(WIDTH + 100)
+        if spawn_timer > 150:
+            obstaculo = Obstaculo(WIDTH)
             obstaculos_group.add(obstaculo)
             spawn_timer = 0
 
@@ -133,7 +133,7 @@ while run:
         obstaculos_group.draw(screen)
 
         font = pygame.font.SysFont(None, 36)
-        text_surface = font.render(f"Tempo: {score}", True, (0, 0, 0))
+        text_surface = font.render(f"Tempo: {score} e Spawn: {spawn_timer}", True, (0, 0, 0))
         screen.blit(text_surface, (10, 10))
 
     else:
