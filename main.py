@@ -1,92 +1,85 @@
 import pygame
 import sys
 
-# Inicialização do Pygame
 pygame.init()
 WIDTH, HEIGHT = 1920, 1080
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Fugindo da Orientadora")
 clock = pygame.time.Clock()
 
-# Classe Player com movimento automático, pulo e limite no meio da tela
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pygame.image.load("assets/player.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (100, 100))  # Escala para 100x100
-        self.rect = self.image.get_rect(midbottom=(200, HEIGHT))  # Posição inicial
-        self.speed_x = 5  # Velocidade horizontal automática
-        self.speed_y = 0  # Velocidade vertical para pulo
-        self.gravity = 1  # Gravidade
-        self.jumping = False  # Controle do pulo
-        self.at_limit = False  # Indica se está no meio da tela
+        self.image = pygame.transform.scale(self.image, (100, 100))
+        self.rect = self.image.get_rect(midbottom=(100, HEIGHT))
+        self.mask = pygame.mask.from_surface(self.image)  # Máscara adicionada
+        self.speed_x = 2
+        self.speed_y = 0
+        self.gravity = 1
+        self.jumping = False
+        self.at_limit = False
 
     def update(self):
-        # Movimento automático para a direita até o meio da tela
         if not self.at_limit:
             self.rect.x += self.speed_x
             if self.rect.centerx >= WIDTH // 2:
                 self.rect.centerx = WIDTH // 2
                 self.at_limit = True
-                self.speed_x = 0  # Para de avançar
+                self.speed_x = 0
 
-        # Aplicar gravidade ao pulo
         if self.jumping:
             self.speed_y += self.gravity
             self.rect.y += self.speed_y
-            if self.rect.bottom >= HEIGHT:  # Ao tocar o chão
+            if self.rect.bottom >= HEIGHT:
                 self.rect.bottom = HEIGHT
                 self.jumping = False
                 self.speed_y = 0
 
-        # Limitar aos bounds da tela
         if self.rect.left < 0:
             self.rect.left = 0
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH
 
     def jump(self):
-        if not self.jumping:  # Só pula se estiver no chão
+        if not self.jumping:
             self.jumping = True
-            self.speed_y = -30  # Impulso inicial do pulo
+            self.speed_y = -25
 
     def knockback(self):
-        # Empurra o Player para trás
-        self.rect.x -= 100  # Recua 200 pixels (ajustável)
+        self.rect.x -= 50
         self.at_limit = False
-        self.speed_x = 2  # Recupera a velocidade para voltar ao meio
+        self.speed_x = 2
 
-# Classe Orientadora com perseguição
 class Orientadora(pygame.sprite.Sprite):
     def __init__(self, player):
         super().__init__()
         self.image = pygame.image.load("assets/orientadora.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (100, 100))  # Escala para 100x100
-        self.rect = self.image.get_rect(midbottom=(50, HEIGHT))  # Posição inicial
+        self.image = pygame.transform.scale(self.image, (100, 100))
+        self.rect = self.image.get_rect(midbottom=(50, HEIGHT))
+        self.mask = pygame.mask.from_surface(self.image)  # Máscara adicionada
         self.player = player
-        self.speed = 3  # Velocidade de perseguição
+        self.speed = 1.5
 
     def update(self):
-        # Persegue a jogadora
         if self.rect.x < self.player.rect.x and not self.player.at_limit:
             self.rect.x += self.speed
         else:
             self.speed_x = 0
 
-# Classe Obstaculo
 class Obstaculo(pygame.sprite.Sprite):
     def __init__(self, x):
         super().__init__()
         self.image = pygame.image.load("assets/obstaculo.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (50, 50))  # Escala para 100x100
-        self.rect = self.image.get_rect(midbottom=(x, HEIGHT))  # Alinhado ao chão
+        self.image = pygame.transform.scale(self.image, (100, 100))
+        self.rect = self.image.get_rect(midbottom=(x, HEIGHT))
+        self.mask = pygame.mask.from_surface(self.image)  # Máscara adicionada
 
     def update(self, speed):
-        self.rect.x -= speed  # Move para a esquerda
-        if self.rect.right < 0:  # Remove ao sair da tela
+        self.rect.x -= speed
+        if self.rect.right < 0:
             self.kill()
 
-# Instanciar objetos
 player = Player()
 orientadora = Orientadora(player)
 
@@ -94,14 +87,12 @@ player_group = pygame.sprite.GroupSingle(player)
 orientadora_group = pygame.sprite.GroupSingle(orientadora)
 obstaculos_group = pygame.sprite.Group()
 
-# Variáveis do jogo
 run = True
 game_active = True
-base_obstacle_speed = 5  # Velocidade base dos obstáculos
+base_obstacle_speed = 3
 score = 0
 spawn_timer = 0
 
-# Loop principal
 while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -111,54 +102,46 @@ while run:
                 player.jump()
 
     if game_active:
-        # Atualizar lógica
         player.update()
         orientadora.update()
-
-        # Aumentar pontuação
         score += 1
 
-        # Gerar obstáculos
         spawn_timer += 1
-        if spawn_timer > 100:  # Intervalo de spawn
-            obstaculo = Obstaculo(WIDTH + 50)
+        if spawn_timer > 100:
+            obstaculo = Obstaculo(WIDTH + 100)
             obstaculos_group.add(obstaculo)
             spawn_timer = 0
 
-        # Ajustar velocidade dos obstáculos
         if player.at_limit:
-            obstacle_speed = base_obstacle_speed + 2  # Aumenta velocidade no limite
+            obstacle_speed = base_obstacle_speed + 2
         else:
-            obstacle_speed = base_obstacle_speed  # Velocidade normal
+            obstacle_speed = base_obstacle_speed
 
         obstaculos_group.update(obstacle_speed)
 
-        # Verificar colisões
-        if pygame.sprite.spritecollide(player, orientadora_group, False):
-            game_active = False  # Fim de jogo se a orientadora alcançar a jogadora
+        # Colisão com máscara com Orientadora
+        if pygame.sprite.spritecollide(player, orientadora_group, False, pygame.sprite.collide_mask):
+            game_active = False
 
-        if player.at_limit and pygame.sprite.spritecollide(player, obstaculos_group, False):
-            player.knockback()  # Empurra o Player para trás ao colidir
+        # Colisão com máscara com Obstáculos
+        if player.at_limit and pygame.sprite.spritecollide(player, obstaculos_group, False, pygame.sprite.collide_mask):
+            player.knockback()
 
-        # Desenhar na tela
-        screen.fill((255, 255, 255))  # Fundo branco
+        screen.fill((255, 255, 255))
         player_group.draw(screen)
         orientadora_group.draw(screen)
         obstaculos_group.draw(screen)
 
-        # Exibir pontuação
         font = pygame.font.SysFont(None, 36)
         text_surface = font.render(f"Tempo: {score}", True, (0, 0, 0))
         screen.blit(text_surface, (10, 10))
 
     else:
-        # Tela de Game Over
         screen.fill((255, 255, 255))
         font = pygame.font.SysFont(None, 48)
         msg = font.render("Game Over! Pressione qualquer tecla para reiniciar", True, (0, 0, 0))
         screen.blit(msg, (50, HEIGHT // 2))
 
-        # Reiniciar ao pressionar tecla
         keys = pygame.key.get_pressed()
         if any(keys):
             game_active = True
