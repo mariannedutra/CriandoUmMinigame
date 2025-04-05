@@ -1,6 +1,6 @@
 # obstaculo.py
 import pygame
-from utils.config import WIDTH, HEIGHT
+from utils.config import HEIGHT
 
 class Obstaculo(pygame.sprite.Sprite):
     def __init__(self, x):

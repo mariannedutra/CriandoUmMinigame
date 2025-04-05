@@ -13,10 +13,17 @@ pygame.display.set_caption("Fugindo da Orientadora")
 clock = pygame.time.Clock()
 
 # Valores de jogo
+# Player
+PLAYER_SPAWN_X = 200
+PLAYER_SPAWN_Y = HEIGHT
+
+
+
+
 BASE_OBSTACLE_SPEED = 3
 SPAWN_INTERVAL = 130  # Intervalo para spawn de obstáculos
 PLAYER_SPEED_X = 2
-PLAYER_SPEED_X_INITIAL = 4
+PLAYER_SPEED_X_INITIAL = 8
 PLAYER_JUMP_FORCE = -30
 PLAYER_KNOCKBACK = 200
 ORIENTADORA_SPEED = 2
