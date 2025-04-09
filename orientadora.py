@@ -1,20 +1,21 @@
-# orientadora.py
 import pygame
-from utils.config import WIDTH, HEIGHT, ORIENTADORA_SPEED
 
-class Orientadora(pygame.sprite.Sprite):
-    def __init__(self, player):
-        super().__init__()
-        self.image = pygame.image.load("assets/orientadora.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (200, 200))
-        self.rect = self.image.get_rect(midbottom=(0, HEIGHT))
-        self.mask = pygame.mask.from_surface(self.image)
+class Orientadora:
+    def __init__(self, x, y, largura, altura, imagem_inimigo=None):
+        self.x = x
+        self.y = y
+        self.largura = largura
+        self.altura = altura
 
-        self.player = player
-        self.speed = ORIENTADORA_SPEED
+        if imagem_inimigo:
+            self.imagem = pygame.image.load(imagem_inimigo).convert_alpha()
+            self.imagem = pygame.transform.scale(self.imagem, (80, 80))
+            self.mask = pygame.mask.from_surface(self.imagem)
+        else:
+            self.imagem = None
 
-    def update(self):
-        # Movimenta-se em direção ao player enquanto o player não estiver parado no meio
-        if self.rect.x < self.player.rect.x and not self.player.at_limit:
-            self.rect.x += self.speed
-        # Caso queira mais comportamento, adicione mais lógicas aqui
+    def desenhar(self, tela, cor):
+        if self.imagem:
+            tela.blit(self.imagem, (self.x, self.y))
+        else:
+            pygame.draw.rect(tela, cor, (self.x, self.y, self.largura, self.altura))

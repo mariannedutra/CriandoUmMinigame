@@ -1,103 +1,68 @@
-# main.py
 import pygame
-import sys
-
-# Importa variáveis e tela de config.py
-from utils.config import (
-    screen, clock, WIDTH, HEIGHT, WHITE, BLACK,
-    BASE_OBSTACLE_SPEED, SPAWN_INTERVAL, FONT, FONT_LARGE
-)
 from player import Player
 from orientadora import Orientadora
-from obstaculo import Obstaculo
+from obstaculos import Obstaculo
 
-def main():
-    player = Player()
-    orientadora = Orientadora(player)
+# Inicialização do Pygame
+pygame.init()
 
-    player_group = pygame.sprite.GroupSingle(player)
-    orientadora_group = pygame.sprite.GroupSingle(orientadora)
-    obstaculos_group = pygame.sprite.Group()
+# Configuração da tela
+largura, altura = 1280, 720
+tela = pygame.display.set_mode((largura, altura))
+pygame.display.set_caption('Fugindo da orientadora')
 
-    run = True
-    game_active = True
-    score = 0
-    spawn_timer = 0
+# Cores
+branco = (255, 255, 255)
+preto = (0, 0, 0)
+vermelho = (255, 0, 0)
 
-    while run:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
+# Inicializando personagens proporcionalmente
+player = Player(largura - 200, altura, "assets/player.png")
+orientadora = Orientadora(80, altura - 140, 60, 90, "assets/orientadora.png")
+obstaculo = Obstaculo(orientadora.x, altura - 100, 30, 20, 20, "assets/obstaculo.png")
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and game_active:
-                    player.jump()
+# Pontuação e fonte
+pontos = 0
+fonte = pygame.font.SysFont(None, 50)
 
-        if game_active:
-            player.update()
-            orientadora.update()
-            score += 1
+# Clock
+clock = pygame.time.Clock()
 
-            spawn_timer += 1
-            if spawn_timer > SPAWN_INTERVAL:
-                obstaculo = Obstaculo(WIDTH)
-                obstaculos_group.add(obstaculo)
-                spawn_timer = 0
+# Loop principal do jogo
+rodando = True
+while rodando:
+    for evento in pygame.event.get():
+        if evento.type == pygame.QUIT:
+            rodando = False
+        if evento.type == pygame.KEYDOWN and evento.key == pygame.K_SPACE:
+            player.pular()
 
-            # Aumenta velocidade se player estiver parado no centro
-            if player.at_limit:
-                obstacle_speed = BASE_OBSTACLE_SPEED + 2
-            else:
-                obstacle_speed = BASE_OBSTACLE_SPEED
+    # Aplicar gravidade ao player
+    player.aplicar_gravidade(altura)
 
-            obstaculos_group.update(obstacle_speed)
+    # Mover obstáculo e verificar pontuação
+    if obstaculo.mover(largura, altura, orientadora.largura):
+        pontos += 1
 
-            # Colisão com Orientadora (com máscara)
-            if pygame.sprite.spritecollide(player, orientadora_group, False, pygame.sprite.collide_mask):
-                game_active = False
+    # Checar colisões
+    if player.get_rect().colliderect(obstaculo.get_rect()):
+        player.vidas -= 1
+        obstaculo.resetar(altura, orientadora.largura)
+        if player.vidas == 0:
+            rodando = False
 
-            # Colisão com Obstáculos (somente se chegou ao centro)
-            if player.at_limit:
-                # Aqui, 'True' faz com que o obstáculo seja removido do grupo ao colidir
-                collisions = pygame.sprite.spritecollide(player, obstaculos_group, True, pygame.sprite.collide_mask)
-                if collisions:
-                    # Se houve colisão, aplicamos o knockback
-                    player.knockback()
+    # Desenhar elementos
+    tela.fill(branco)
+    player.desenhar(tela)
+    orientadora.desenhar(tela, preto)
+    obstaculo.desenhar(tela, vermelho)
 
-            # Desenho na tela
-            screen.fill(WHITE)
-            player_group.draw(screen)
-            orientadora_group.draw(screen)
-            obstaculos_group.draw(screen)
+    texto_pontos = fonte.render(f'Pontos: {pontos}', True, preto)
+    texto_vidas = fonte.render(f'Vidas: {player.vidas}', True, vermelho)
+    tela.blit(texto_pontos, (largura - 200, 20))
+    tela.blit(texto_vidas, (largura - 200, 60))
 
-            # Exibir pontuação e debug de spawn
-            text_surface = FONT.render(f"Tempo: {score} | Spawn: {spawn_timer}", True, BLACK)
-            screen.blit(text_surface, (10, 10))
+    pygame.display.flip()
+    clock.tick(60)
 
-        else:
-            # Tela de Game Over
-            screen.fill(WHITE)
-            msg = FONT_LARGE.render("Game Over! Pressione qualquer tecla para reiniciar", True, BLACK)
-            screen.blit(msg, (50, HEIGHT // 2))
-
-            keys = pygame.key.get_pressed()
-            if any(keys):
-                # Reinicia o jogo
-                game_active = True
-                score = 0
-                spawn_timer = 0
-                obstaculos_group.empty()
-                player.rect.midbottom = (200, HEIGHT)
-                orientadora.rect.midbottom = (50, HEIGHT)
-                # Velocidade inicial do player
-                player.speed_x = 2
-                player.at_limit = False
-
-        pygame.display.update()
-        clock.tick(60)
-
-    pygame.quit()
-    sys.exit()
-
-if __name__ == "__main__":
-    main()
+pygame.quit()

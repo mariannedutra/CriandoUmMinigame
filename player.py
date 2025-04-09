@@ -1,51 +1,36 @@
-# player.py
 import pygame
-from utils.config import PLAYER_SPEED_X_INITIAL, WIDTH, HEIGHT, PLAYER_SPEED_X, PLAYER_JUMP_FORCE, PLAYER_KNOCKBACK
 
-class Player(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        self.image = pygame.image.load("assets/player.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (200, 200))
-        self.rect = self.image.get_rect(midbottom=(200, HEIGHT))
-        self.mask = pygame.mask.from_surface(self.image)
-        
-        self.speed_x = PLAYER_SPEED_X_INITIAL
-        self.speed_y = 0
+class Player:
+    def __init__(self, x, y, imagem_player=None):
+        self.x = x
+        self.y = y
+        self.vel_y = 0
         self.gravity = 1
-        self.jumping = False
-        self.at_limit = False  # Flag para saber se chegou ao centro da tela
+        self.pulando = False
+        self.vidas = 3
 
-    def update(self):
-        # Movimento horizontal até chegar ao meio da tela
-        if not self.at_limit:
-            self.rect.x += self.speed_x
-            if self.rect.centerx >= WIDTH // 2:
-                self.rect.centerx = WIDTH // 2
-                self.at_limit = True
-                self.speed_x = 0
+        self.imagem = pygame.image.load(imagem_player).convert_alpha()
+        self.imagem = pygame.transform.scale(self.imagem, (100, 100))
+        self.largura = self.imagem.get_width()  # Atualiza largura
+        self.altura = self.imagem.get_height()  # Atualiza altura
+        self.mask = pygame.mask.from_surface(self.imagem)
 
-        # Lógica de pular (simples)
-        if self.jumping:
-            self.speed_y += self.gravity
-            self.rect.y += self.speed_y
-            if self.rect.bottom >= HEIGHT:
-                self.rect.bottom = HEIGHT
-                self.jumping = False
-                self.speed_y = 0
 
-        # Limites de tela (opcional caso queira evitar que saia da tela)
-        if self.rect.left < 0:
-            self.rect.left = 0
-        if self.rect.right > WIDTH:
-            self.rect.right = WIDTH
+    def pular(self):
+        if not self.pulando:
+            self.vel_y = -15
+            self.pulando = True
 
-    def jump(self):
-        if not self.jumping:
-            self.jumping = True
-            self.speed_y = PLAYER_JUMP_FORCE
+    def aplicar_gravidade(self, altura_tela):
+        self.vel_y += self.gravity
+        self.y += self.vel_y
+        if self.y >= altura_tela - self.altura - 10:
+            self.y = altura_tela - self.altura - 10
+            self.pulando = False
 
-    def knockback(self):
-        self.rect.x -= PLAYER_KNOCKBACK
-        self.at_limit = False
-        self.speed_x = PLAYER_SPEED_X
+    def desenhar(self, tela):
+
+        tela.blit(self.imagem, (self.x, self.y))
+
+    def get_rect(self):
+        return pygame.Rect(self.x, self.y, self.largura, self.altura)
