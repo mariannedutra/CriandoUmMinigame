@@ -1,7 +1,7 @@
 import pygame
 
 class Player:
-    def __init__(self, x, y, largura_player, altura_player, imagem_player=None):
+    def __init__(self, x, y, largura_player, altura_player, imagem_player):
         self.x = x
         self.y = y
         self.vel_y = 0
@@ -25,6 +25,7 @@ class Player:
         self.y += self.vel_y
         if self.y >= altura_tela - self.altura_player:
             self.y = altura_tela - self.altura_player
+            self.vel_y = 0
             self.pulando = False
 
     def desenhar(self, tela):
