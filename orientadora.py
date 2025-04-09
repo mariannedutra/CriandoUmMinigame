@@ -1,15 +1,15 @@
 import pygame
 
 class Orientadora:
-    def __init__(self, x, y, imagem_inimigo=None):
+    def __init__(self, x, y, largura_orientadora, altura_orientadora, imagem_inimigo=None):
         self.x = x
         self.y = y
-
+        self.altura_orientadora = altura_orientadora 
+        self.largura = largura_orientadora
         if imagem_inimigo:
             self.imagem = pygame.image.load(imagem_inimigo).convert_alpha()
-            self.imagem = pygame.transform.scale(self.imagem, (130, 130))
-            self.largura = self.imagem.get_width()  # Atualiza largura
-            self.altura = self.imagem.get_height()  # Atualiza altura
+            self.imagem = pygame.transform.scale(self.imagem, (largura_orientadora, altura_orientadora))
+            
             self.mask = pygame.mask.from_surface(self.imagem)
         else:
             self.imagem = None

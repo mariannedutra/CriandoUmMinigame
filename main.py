@@ -2,6 +2,7 @@ import pygame
 from player import Player
 from orientadora import Orientadora
 from obstaculos import Obstaculo
+from background import Background
 
 # ========================
 # Configurações e Constantes
@@ -15,10 +16,17 @@ COR_BRANCA = (255, 255, 255)
 COLOR_BLACK = (0, 0, 0)
 COLOR_RED = (255, 0, 0)
 
+# Configurações dos objetos
+
+ALTURA_PERSONAGEM = 140
+LARGURA_PERSONAGEM = 140
+ALTURA_OBSTACULO = 90
+LARGURA_OBSTACULO = 90
+
 # Posições Iniciais e Finais para os personagens
-POSICAO_DOS_OBJETOS_NO_EIXO_Y = ALTURA_DA_TELA - 130
-POSICAO_FINAL_PLAYER_EIXO_X= 1100
-POSICAO_FINAL_ORIENTADORA_EIXO_X = 80
+POSICAO_DOS_OBJETOS_NO_EIXO_Y = ALTURA_DA_TELA - 140
+POSICAO_FINAL_PLAYER_EIXO_X= LARGURA_DA_TELA - 2*LARGURA_PERSONAGEM
+POSICAO_FINAL_ORIENTADORA_EIXO_X = LARGURA_PERSONAGEM - 3//LARGURA_PERSONAGEM
 
 # Velocidade de entrada dos personagens
 VELOCIDADE_DE_ENTRADA = 8
@@ -34,13 +42,16 @@ def initialize_game():
     pygame.display.set_caption('Fugindo da Orientadora')
 
     # Inicializando personagens com suas posições iniciais
-    player = Player(0, POSICAO_DOS_OBJETOS_NO_EIXO_Y, "assets/player.png")
-    player.x = -130 # Inicia fora da tela à esquerda
+    player = Player(0, POSICAO_DOS_OBJETOS_NO_EIXO_Y, LARGURA_PERSONAGEM, ALTURA_PERSONAGEM, "assets/player.png")
+    player.x = - LARGURA_PERSONAGEM # Inicia fora da tela à esquerda
 
-    orientadora = Orientadora(0, POSICAO_DOS_OBJETOS_NO_EIXO_Y, "assets/orientadora.png")
-    orientadora.x = -260  # Inicia fora da tela à esquerda
+    orientadora = Orientadora(0, POSICAO_DOS_OBJETOS_NO_EIXO_Y, LARGURA_PERSONAGEM, ALTURA_PERSONAGEM, "assets/orientadora.png")
+    orientadora.x = -(2*LARGURA_PERSONAGEM) # Inicia fora da tela à esquerda
 
-    obstaculo = Obstaculo(POSICAO_FINAL_ORIENTADORA_EIXO_X, POSICAO_DOS_OBJETOS_NO_EIXO_Y, 10, "assets/obstaculo.png")
+    obstaculo = Obstaculo(POSICAO_FINAL_ORIENTADORA_EIXO_X, POSICAO_DOS_OBJETOS_NO_EIXO_Y, 10, LARGURA_OBSTACULO, ALTURA_OBSTACULO, "assets/obstaculo.png")
+    
+    # Inicializando o fundo
+    background = Background(LARGURA_DA_TELA, ALTURA_DA_TELA)
 
     # Inicializando fonte e pontuação
     font = pygame.font.SysFont(None, 50)
@@ -48,7 +59,7 @@ def initialize_game():
 
     clock = pygame.time.Clock()
 
-    return screen, player, orientadora, obstaculo, font, score, clock
+    return screen, player, orientadora, obstaculo, background, font, score, clock
 
 
 # ========================
@@ -90,7 +101,7 @@ def update_entrance_phase(player, orientadora):
     return not (player.x >= POSICAO_FINAL_PLAYER_EIXO_X and orientadora.x >= POSICAO_FINAL_ORIENTADORA_EIXO_X)
 
 
-def update_game_state(player, orientadora, obstaculo, score):
+def update_game_state(player, obstaculo, score):
     """
     Atualiza a lógica principal do jogo após a fase de entrada.
     Aplica gravidade, movimenta o obstáculo e trata de colisões.
@@ -101,7 +112,7 @@ def update_game_state(player, orientadora, obstaculo, score):
 
     # Atualiza o obstáculo e incrementa a pontuação se necessário
     
-    if obstaculo.mover(LARGURA_DA_TELA, ALTURA_DA_TELA, orientadora.largura):
+    if obstaculo.mover(LARGURA_DA_TELA, ALTURA_DA_TELA, POSICAO_FINAL_ORIENTADORA_EIXO_X):
         score += 1
 
     # Checa colisões utilizando máscaras (pixel-perfect)
@@ -116,13 +127,16 @@ def update_game_state(player, orientadora, obstaculo, score):
     return score, True
 
 
-def render(screen, player, orientadora, obstaculo, font, score, entrance_active):
+def render(screen, player, orientadora, obstaculo, background, font, score, entrance_active):
     """
     Renderiza os elementos do jogo na tela,
     incluindo personagens, obstáculo, pontuação e vidas.
     O obstáculo só é desenhado se a fase de entrada já terminou.
     """
     screen.fill(COR_BRANCA)
+    
+    # Desenha o fundo com nuvens
+    background.draw(screen)
 
     player.desenhar(screen)
     orientadora.desenhar(screen)
@@ -143,19 +157,22 @@ def render(screen, player, orientadora, obstaculo, font, score, entrance_active)
 # Função Principal
 # ========================
 def main():
-    screen, player, orientadora, obstaculo, font, score, clock = initialize_game()
+    screen, player, orientadora, obstaculo, background, font, score, clock = initialize_game()
     running = True
     entrance_active = True
 
     while running:
         running = handle_events(player, entrance_active)
+        
+        # Atualiza o fundo
+        background.update()
 
         if entrance_active:
             entrance_active = update_entrance_phase(player, orientadora)
         else:
-            score, running = update_game_state(player, orientadora, obstaculo, score)
+            score, running = update_game_state(player, obstaculo, score)
 
-        render(screen, player, orientadora, obstaculo, font, score, entrance_active)
+        render(screen, player, orientadora, obstaculo, background, font, score, entrance_active)
         clock.tick(FPS)
 
     pygame.quit()
