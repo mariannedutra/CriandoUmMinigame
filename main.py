@@ -12,9 +12,10 @@ ALTURA_DA_TELA = 720
 FPS = 60
 
 # Cores (R, G, B)
-COR_BRANCA = (255, 255, 255)
-COLOR_BLACK = (0, 0, 0)
-COLOR_RED = (255, 0, 0)
+COR_BRANCO = (255, 255, 255)
+COR_PRETO = (0, 0, 0)
+COR_VERMELHO = (255, 0, 0)
+COR_AZUL_CLARO = (173, 216, 230)
 
 # Configurações dos objetos
 
@@ -133,7 +134,7 @@ def render(screen, player, orientadora, obstaculo, background, font, score, entr
     incluindo personagens, obstáculo, pontuação e vidas.
     O obstáculo só é desenhado se a fase de entrada já terminou.
     """
-    screen.fill(COR_BRANCA)
+    screen.fill(COR_AZUL_CLARO)
     
     # Desenha o fundo com nuvens
     background.draw(screen)
@@ -145,8 +146,8 @@ def render(screen, player, orientadora, obstaculo, background, font, score, entr
         obstaculo.desenhar(screen)
 
     # Renderização dos textos de pontuação e vidas
-    score_text = font.render(f'Pontos: {score}', True, COLOR_BLACK)
-    lives_text = font.render(f'Vidas: {player.vidas}', True, COLOR_RED)
+    score_text = font.render(f'Pontos: {score}', True, COR_PRETO)
+    lives_text = font.render(f'Vidas: {player.vidas}', True, COR_VERMELHO)
     screen.blit(score_text, (LARGURA_DA_TELA - 200, 20))
     screen.blit(lives_text, (LARGURA_DA_TELA - 200, 60))
 
