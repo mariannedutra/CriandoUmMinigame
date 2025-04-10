@@ -35,6 +35,7 @@ class Player(GameObjects):
     def __init__(self, x, y, largura_player, altura_player, imagem_player):
         super().__init__(x, y, largura_player, altura_player, imagem_player)
         self.imagem_normal = self.imagem  # guarda a imagem normal
+        self.y_inicial = y  # Guarda a posição Y inicial
         self.vel_y = 0
         self.gravity = 1
         self.pulando = False
@@ -68,8 +69,8 @@ class Player(GameObjects):
     def aplicar_gravidade(self, altura_tela):
         self.vel_y += self.gravity
         self.y += self.vel_y
-        if self.y >= altura_tela - self.altura:
-            self.y = altura_tela - self.altura
+        if self.y >= self.y_inicial:  # Use a posição Y inicial como referência
+            self.y = self.y_inicial
             self.vel_y = 0
             self.pulando = False
             

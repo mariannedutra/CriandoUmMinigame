@@ -87,9 +87,11 @@ def render(screen, player, orientadora, obstaculo, background, font, score, entr
     incluindo personagens, obstáculo, pontuação e vidas.
     O obstáculo só é desenhado se a fase de entrada já terminou.
     """
+    
+    
     screen.fill(COR_AZUL_CLARO)
      
-    # Desenha o fundo com nuvens
+    # Desenha o fundo
     background.draw(screen)
 
     player.desenhar(screen)
