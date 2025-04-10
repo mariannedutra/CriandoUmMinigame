@@ -17,9 +17,6 @@ clock = pygame.time.Clock()
 PLAYER_SPAWN_X = 200
 PLAYER_SPAWN_Y = HEIGHT
 
-
-
-
 BASE_OBSTACLE_SPEED = 3
 SPAWN_INTERVAL = 130  # Intervalo para spawn de obstáculos
 PLAYER_SPEED_X = 2

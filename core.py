@@ -62,6 +62,7 @@ def update_game_state(player, obstaculo, score):
     """
     # Aplica gravidade ao player
     player.aplicar_gravidade(ALTURA_DA_TELA)
+    player.update()    
 
     # Atualiza o obstáculo e incrementa a pontuação se necessário
     
@@ -72,7 +73,7 @@ def update_game_state(player, obstaculo, score):
     offset_x = obstaculo.x - player.x
     offset_y = obstaculo.y - player.y
     if player.mask.overlap(obstaculo.mask, (offset_x, offset_y)) is not None:
-        player.vidas -= 1
+        player.levar_dano()  
         obstaculo.resetar(ALTURA_DA_TELA, POSICAO_FINAL_ORIENTADORA_EIXO_X)
         if player.vidas == 0:
             return score, False  # Finaliza o jogo se as vidas acabarem

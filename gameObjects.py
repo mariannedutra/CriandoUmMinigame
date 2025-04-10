@@ -34,10 +34,31 @@ class GameObjects:
 class Player(GameObjects):
     def __init__(self, x, y, largura_player, altura_player, imagem_player):
         super().__init__(x, y, largura_player, altura_player, imagem_player)
+        self.imagem_normal = self.imagem  # guarda a imagem normal
         self.vel_y = 0
         self.gravity = 1
         self.pulando = False
         self.vidas = 3
+        self.imagem_dano = pygame.image.load("assets/dano.png").convert_alpha()
+        self.imagem_dano = pygame.transform.scale(self.imagem_dano, (largura_player, altura_player))
+        self.damaged = False
+        self.damaged_time = 0
+        self.damaged_duration = 500
+
+    def levar_dano(self):
+        """Troca o sprite e inicia contagem do tempo de invencibilidade."""
+        self.vidas -= 1
+        self.damaged = True
+        self.imagem = self.imagem_dano  # atualiza a imagem para a de dano
+        self.damaged_time = pygame.time.get_ticks()
+
+    def update(self):
+        if self.damaged:
+            now = pygame.time.get_ticks()
+            if now - self.damaged_time >= self.damaged_duration:
+                self.damaged = False
+                self.imagem = self.imagem_normal  # volta à imagem normal
+
 
     def pular(self):
         if not self.pulando:
@@ -51,6 +72,7 @@ class Player(GameObjects):
             self.y = altura_tela - self.altura
             self.vel_y = 0
             self.pulando = False
+            
 
     def get_rect(self):
         return pygame.Rect(self.x, self.y, self.largura, self.altura)
