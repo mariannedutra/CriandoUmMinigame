@@ -1,0 +1,27 @@
+# ========================
+# Configurações e Constantes
+# ========================
+LARGURA_DA_TELA = 1280
+ALTURA_DA_TELA = 720
+FPS = 60
+
+# Cores (R, G, B)
+COR_BRANCO = (255, 255, 255)
+COR_PRETO = (0, 0, 0)
+COR_VERMELHO = (255, 0, 0)
+COR_AZUL_CLARO = (173, 216, 230)
+
+# Configurações dos objetos
+
+ALTURA_PERSONAGEM = 160
+LARGURA_PERSONAGEM = 140
+ALTURA_OBSTACULO = 90
+LARGURA_OBSTACULO = 90
+
+# Posições Iniciais e Finais para os personagens
+POSICAO_DOS_OBJETOS_NO_EIXO_Y = ALTURA_DA_TELA - 160
+POSICAO_FINAL_PLAYER_EIXO_X= LARGURA_DA_TELA - 2*LARGURA_PERSONAGEM
+POSICAO_FINAL_ORIENTADORA_EIXO_X = LARGURA_PERSONAGEM - 3//LARGURA_PERSONAGEM
+
+# Velocidade de entrada dos personagens
+VELOCIDADE_DE_ENTRADA = 8
