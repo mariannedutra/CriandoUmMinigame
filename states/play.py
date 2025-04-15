@@ -19,7 +19,7 @@ class PlayState(GameState):
             self.next_state = None
 
     def update(self, dt):
-        self.background.update()
+        self.background.update(dt)
         if self.entrance_active:
             self.entrance_active = update_entrance_phase(self.player,
                                                          self.orientadora)

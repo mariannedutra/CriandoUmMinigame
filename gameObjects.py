@@ -106,3 +106,6 @@ class Obstaculo(GameObjects):
     def resetar(self, altura_tela, posicao_orientadora):
         self.x = posicao_orientadora
         self.y = altura_tela - random.randint(self.altura - 10, self.altura)
+    
+    def increase_speed(self):
+        self.velocidade += 0.8

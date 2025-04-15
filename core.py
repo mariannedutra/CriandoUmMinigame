@@ -68,6 +68,7 @@ def update_game_state(player, obstaculo, score):
     
     if obstaculo.mover(LARGURA_DA_TELA, ALTURA_DA_TELA, POSICAO_FINAL_ORIENTADORA_EIXO_X):
         score += 1
+        obstaculo.increase_speed()  # Aumenta a velocidade do obstáculo após passar pela tela
 
     # Checa colisões utilizando máscaras (pixel-perfect)
     offset_x = obstaculo.x - player.x
