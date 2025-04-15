@@ -1,5 +1,8 @@
 # Fugindo da Orientadora
 
+## Apresentação de slides
+[https://maryclaires.itch.io/fugindodaorientadora](https://www.canva.com/design/DAGi09UdvY0/xymncvL3GXo8DZfDygkBFg/edit)
+
 ## 🎮 Jogue agora mesmo
 https://maryclaires.itch.io/fugindodaorientadora
 
