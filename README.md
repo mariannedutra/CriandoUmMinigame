@@ -4,7 +4,7 @@
 https://maryclaires.itch.io/fugindodaorientadora
 
 ## 📝 Descrição do Projeto
-Este projeto consiste em um minigame desenvolvido em Python com a biblioteca Pygame. O objetivo principal é sobreviver o máximo possível, fugindo da "orientadora" que persegue o jogador, semelhante ao clássico jogo do dinossauro do Google Chrome.
+Este projeto consiste em um minigame desenvolvido em Python com a biblioteca Pygame. O objetivo principal é sobreviver o máximo possível, fugindo dos trabalhos lançados pela Orientadora que persegue o jogador, inspirado no clássico jogo do dinossauro do Google Chrome.
 
 ## 📌 Estrutura do Projeto
 
