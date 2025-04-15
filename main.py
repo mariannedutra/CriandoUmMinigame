@@ -1,8 +1,9 @@
 import pygame
+import asyncio
 from constants import *
 from states.title import TitleScreen
 
-def main():
+async def main():
     pygame.init()
     screen = pygame.display.set_mode((LARGURA_DA_TELA, ALTURA_DA_TELA))
     clock  = pygame.time.Clock()
@@ -17,8 +18,8 @@ def main():
         state.render(screen)
 
         state = state.next_state
+        await asyncio.sleep(0)
 
     pygame.quit()
 
-if __name__ == "__main__":
-    main()
+asyncio.run(main())
